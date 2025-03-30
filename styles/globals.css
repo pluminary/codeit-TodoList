@@ -1,4 +1,12 @@
+/* globals.css */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* font */
+@import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.0/NanumSquare.css');
+
+body {
+  @apply font-nanum;
+}

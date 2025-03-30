@@ -14,19 +14,39 @@ export default function TodoItem({ id, content, done, onToggle }: Props) {
   // useRouter 훅을 사용하여 라우터 객체를 가져옴
   const router = useRouter();
 
-  // 할 일 항목을 클릭했을 때 상세 페이지로 이동
+  // 항목 클릭 시 상세 페이지 이동
+  const handleClick = () => {
+    router.push(`/items/${id}`);
+  };
+
   return (
     <li
-      className="p-4 bg-white rounded shadow flex justify-between items-center cursor-pointer"
-      onClick={() => router.push(`/items/${id}`)}
+      className={`w-full h-[50px] px-4 flex items-center gap-4 border-[2px] border-slate-900 rounded-full ${
+        done ? "bg-violet-100" : "bg-white"
+      } cursor-pointer`}
+      onClick={handleClick}
     >
-      <input
-        type="checkbox"
-        checked={done}
-        onClick={(e) => e.stopPropagation()} // 상세페이지 이동 막기
-        onChange={() => onToggle(id, !done)}
-      />
-      <span className={done ? "line-through text-gray-400" : ""}>
+      {/* 체크박스 */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle(id, !done);
+        }}
+      >
+        <img
+          src={done ? "/icons/checkbox-on.svg" : "/icons/checkbox-off.svg"}
+          alt="check"
+          className="w-8 h-8"
+        />
+      </button>
+
+      {/* 텍스트 */}
+      <span
+        className={`text-slate-800 text-base font-regular ${
+          done ? "line-through" : ""
+        }`}
+      >
         {content}
       </span>
     </li>

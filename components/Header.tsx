@@ -1,29 +1,39 @@
 // components/Header.tsx
 
- // 클라이언트 컴포넌트로 설정
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-// Header 컴포넌트
 export default function Header() {
-  // useRouter 훅을 사용하여 라우터 객체를 가져옴
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // 홈으로 이동하는 함수
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    router.push("/").then(() => {
-      router.reload(); // 강제로 새로고침
-    });
+  // 뷰포트 크기에 따라 로고 변경
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 376);
+    };
+
+    handleResize(); // 초기 실행
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleLogoClick = () => {
+    router.push("/").then(() => router.reload());
   };
 
-  // Link 컴포넌트의 onClick 이벤트 핸들러를 사용하여 홈으로 이동하는 함수를 호출
   return (
-    <header className="w-full bg-brand-900 py-4 px-6 text-white text-xl font-bold shadow-md">
-      <Link href="/" onClick={handleClick}>
-        <h1 className="cursor-pointer">📝 내 할 일 목록</h1>
-      </Link>
+    <header className="w-full h-[60px] bg-white border-b border-slate-200">
+      <div className="mx-auto w-full max-w-[1200px] px-4 mobile:px-6 pc:px-0 h-full flex items-center">
+        <img
+          src={isMobile ? "/images/logo-small.svg" : "/images/logo-large.svg"}
+          alt="Do It Logo"
+          className={isMobile ? "w-[71px] h-[40px]" : "w-[151px] h-[40px]"}
+          onClick={handleLogoClick}
+          style={{ cursor: "pointer" }}
+        />
+      </div>
     </header>
   );
 }

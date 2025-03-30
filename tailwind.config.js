@@ -1,3 +1,4 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -6,23 +7,22 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        brand: {
-          900: "#0F172A",
-          800: "#1E293B",
-          500: "#64748B",
-          400: "#94A3B8",
-          300: "#CBD5E1",
-          200: "#E2E8F0",
-          100: "#F1F5F9",
-        },
-        accent: {
-          violet600: "#7C3AED",
-          violet100: "#EDE9FE",
-          rose500: "#F43F5E",
-          lime300: "#BEF264",
-          amber800: "#92400E",
-        },
+      screens: {
+        'pc': '1200px',
+        'tablet': '744px',
+        'mobile': '375px',
+      },
+      fontFamily: {
+        nanum: ['"NanumSquare"', 'sans-serif'],
+      },
+      fontSize: {
+        base: "16px",
+        md: "18px",
+        lg: "20px",
+      },
+      fontWeight: {
+        regular: "400",
+        bold: "700",
       },
     },
   },
