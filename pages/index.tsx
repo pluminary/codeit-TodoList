@@ -6,20 +6,26 @@ import Header from "../components/Header";
 import TodoItem from "../components/TodoItem";
 import { updateTodo } from "../api/updateTodo";
 
+// 할 일 목록의 타입 정의 (TodoItem 컴포넌트에서 사용되는 props 타입)
 type Todo = {
   id: string;
   name: string;
   isCompleted: boolean;
 };
 
+// 할 일 목록을 가져오는 API
 export default function Home() {
+
+  // 할 일 목록을 관리하는 상태
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todoText, setTodoText] = useState("");
 
+  // 컴포넌트가 마운트될 때 할 일 목록을 가져옴
   useEffect(() => {
     fetchTodos();
   }, []);
 
+  // 할 일 목록을 가져오는 함수
   const fetchTodos = () => {
     getTodos()
       .then((data) => {
@@ -28,6 +34,7 @@ export default function Home() {
       .catch((err) => console.error(err));
   };
 
+  // 할 일을 추가하는 함수
   const handleAddTodo = async () => {
     if (todoText.trim() === "") {
       alert("할 일을 입력해주세요!");
@@ -44,6 +51,7 @@ export default function Home() {
     }
   };
 
+  // 할 일의 상태를 변경하는 함수
   const handleToggleTodo = async (id: string, done: boolean) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -64,10 +72,11 @@ export default function Home() {
     }
   };
 
-  // 분리 렌더링용
+  // 진행 중인 할 일과 완료된 할 일을 분리
   const inProgressTodos = todos.filter((todo) => !todo.isCompleted);
   const completedTodos = todos.filter((todo) => todo.isCompleted);
 
+  // 진행 중인 할 일 목록과 완료된 할 일 목록을 각각 렌더링
   return (
     <main className="min-h-screen bg-brand-100">
       <Header />
