@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { getTodo } from "../../api/getTodo";
 import { updateTodo } from "../../api/updateTodo";
 import { deleteTodo } from "../../api/deleteTodo";
+import Header from "../../components/Header";
 
 // 할 일 목록의 타입 정의 (TodoItem 컴포넌트에서 사용되는 props 타입)
 type Todo = {
@@ -113,65 +114,142 @@ export default function ItemDetail() {
       alert("삭제 실패!");
     }
   };
-
-  // 할 일 정보가 없으면 로딩 중 메시지 표시
-  if (!todo) return <p className="p-6">로딩 중...</p>;
   
   // 할 일 정보가 있으면 상세 페이지 렌더링
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-xl font-bold">📝 할 일 상세</h1>
+    <main className="min-h-screen bg-gray-50">
+      <Header />
+      <section
+        className="w-full max-w-[1200px] bg-white mx-auto px-[24px] pc:px-[102px] pt-10 pb-10 space-y-6"
+        style={{ minHeight: "calc(100vh - 60px)" }}
+      >
+        {/* 이름 + 체크 상태 영역 */}
+        <div className="w-full h-[60px] flex justify-center items-center border-[2px] border-slate-900 rounded-[24px] px-6 py-3 shadow-[4px_3.5px_0px_theme('colors.slate.900')] bg-white">
+          {/* 체크박스 */}
+          <button
+            type="button"
+            onClick={() => setIsCompleted(!isCompleted)}
+            className="w-8 h-8 flex-shrink-0"
+          >
+            <img
+              src={isCompleted ? "/icons/checkbox-on.svg" : "/icons/checkbox-off.svg"}
+              alt="check"
+              className="w-8 h-8"
+            />
+          </button>
+          {/* 텍스트 */}
+          <span className="ml-4 text-xl font-bold text-slate-900 underline overflow-hidden text-ellipsis whitespace-nowrap">
+            {name}
+          </span>
+        </div>
+        
+        {/* 이미지 + 메모 */}
+        <div className="flex flex-col tablet:flex-row gap-6">
+          {/* 이미지 업로드 영역 */}
+          <div
+            className={`tablet:flex-[4] h-[300px] tablet:h-[300px] rounded-[24px] relative overflow-hidden flex items-center justify-center 
+              bg-slate-50 ${imagePreview || imageUrl ? 'border-0' : 'border-[2px] border-dashed border-slate-300'}`}
+          >
+            {imagePreview || imageUrl ? (
+              <>
+                <img
+                  src={imagePreview ?? imageUrl}
+                  alt="미리보기"
+                  className="w-full h-full object-cover rounded-[24px]"
+                />
+                {/* 수정 아이콘 */}
+                <label className="absolute bottom-4 right-4 w-16 h-16 rounded-full 
+                                  bg-[#0F172A80] border-[2px] border-slate-900 
+                                  flex items-center justify-center cursor-pointer">
+                  <img
+                    src="/icons/edit.svg"
+                    alt="edit"
+                    className="w-6 h-6"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              </>
+            ) : (
+              <>
+                <label className="flex flex-col items-center justify-center cursor-pointer w-full h-full">
+                  <img
+                    src="/images/img-file.svg"
+                    alt="upload icon"
+                    className="w-16 h-16 mb-2"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
 
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="border rounded p-2 w-full text-lg font-semibold"
-      />
+                {/* 오른쪽 하단 + 버튼 */}
+                <label className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center cursor-pointer">
+                  <img
+                    src="/icons/plus-large.svg"
+                    alt="upload"
+                    className="w-5 h-5"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              </>
+            )}
+          </div>
 
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={isCompleted}
-          onChange={(e) => setIsCompleted(e.target.checked)}
-        />
-        완료됨
-      </label>
+          {/* 메모 영역 */}
+          <div
+            className="tablet:flex-[6] rounded-[24px] p-6 bg-[url('/images/memo.svg')] bg-repeat bg-[length:100%] relative overflow-hidden"
+          >
+            <h3 className="text-center text-amber-800 text-base font-bold mb-4">
+              Memo
+            </h3>
 
-      <textarea
-        value={memo ?? ""}
-        onChange={(e) => setMemo(e.target.value)}
-        className="w-full h-40 p-4 bg-yellow-50 border rounded resize-none"
-        placeholder="메모를 입력하세요"
-      />
+            {/* 텍스트에어리어를 스크롤 되게 */}
+            <div className="h-[216px] overflow-y-auto">
+              <textarea
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                placeholder="메모를 입력하세요"
+                className="w-full h-full bg-transparent outline-none resize-none text-slate-800 text-center"
+              />
+            </div>
+          </div>
+        </div>
 
-      {/* 이미지 업로드 */}
-      <div className="space-y-2">
-        <label className="font-semibold">이미지 업로드 (5MB 이하, 영어파일명)</label>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {imagePreview || imageUrl ? (
-          <img
-            src={imagePreview ?? imageUrl}
-            alt="미리보기"
-            className="w-48 h-48 object-cover border rounded"
-          />
-        ) : null}
-      </div>
-
-      <div className="flex gap-4 justify-end">
-        <button
-          onClick={handleUpdate}
-          className="px-6 py-2 rounded bg-white border shadow hover:bg-gray-50"
-        >
-          ✓ 수정 완료
-        </button>
-        <button
-          onClick={handleDelete}
-          className="px-6 py-2 rounded bg-red-500 text-white shadow hover:bg-red-600"
-        >
-          ✖ 삭제하기
-        </button>
-      </div>
-    </div>
+        {/* 버튼 영역 */}
+        <div className="flex gap-4 pc:justify-end justify-center">
+          <button
+            onClick={handleUpdate}
+            className="flex items-center gap-1 w-[164px] justify-center 
+                      bg-slate-200 border-[2px] border-slate-900 rounded-[24px] 
+                      shadow-[4px_3.5px_0px_#0F172A] px-5 py-3 
+                      text-slate-900 text-base font-bold
+                      hover:bg-lime-300 active:bg-lime-300"
+          >
+            <img src="/icons/check.svg" alt="수정" className="w-4 h-4" />
+            수정 완료
+          </button>
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-1 w-[164px] justify-center bg-rose-500 border-[2px] border-slate-900 rounded-[24px] shadow-[4px_3.5px_0px_#0F172A] px-5 py-3 text-white text-base font-bold hover:bg-rose-600"
+          >
+            <img src="/icons/close.svg" alt="삭제" className="w-4 h-4" />
+            삭제하기
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -93,6 +93,8 @@ export default function Home() {
         <div className="flex items-center flex-1 bg-slate-100 border-[2px] border-slate-900 rounded-[24px] shadow-[4px_3.5px_0px_theme('colors.slate.900')] px-6 py-3">
           <input
             type="text"
+            id="todo-input"
+            name="todo"
             placeholder="할 일을 입력해주세요"
             value={todoText}
             onChange={(e) => setTodoText(e.target.value)}

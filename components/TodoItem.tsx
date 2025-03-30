@@ -43,7 +43,7 @@ export default function TodoItem({ id, content, done, onToggle }: Props) {
 
       {/* 텍스트 */}
       <span
-        className={`text-slate-800 text-base font-regular ${
+        className={`text-slate-800 text-base font-regular overflow-hidden text-ellipsis whitespace-nowrap ${
           done ? "line-through" : ""
         }`}
       >
