@@ -6,7 +6,7 @@ import { updateTodo } from "../../api/updateTodo";
 import { deleteTodo } from "../../api/deleteTodo";
 import Header from "../../components/Header";
 
-// 할 일 목록의 타입 정의 (TodoItem 컴포넌트에서 사용되는 props 타입)
+// 할 일 항목의 타입 정의
 type Todo = {
   id: string;
   name: string;
@@ -19,6 +19,7 @@ type Todo = {
 export default function ItemDetail() {
   const router = useRouter(); // useRouter 훅을 사용하여 라우터 객체를 가져옴
   const { itemId } = router.query;  // URL에서 itemId를 가져옴
+  
   const [todo, setTodo] = useState<Todo | null>(null);  // 할 일 정보를 저장하는 상태
   const [name, setName] = useState(""); // 할 일 이름을 저장하는 상태
   const [memo, setMemo] = useState(""); // 할 일 메모를 저장하는 상태
@@ -27,6 +28,8 @@ export default function ItemDetail() {
   const [imageUrl, setImageUrl] = useState(""); // 할 일 이미지 URL을 저장하는 상태
   const [imageFile, setImageFile] = useState<File | null>(null);  // 할 일 이미지 파일을 저장하는 상태
   const [imagePreview, setImagePreview] = useState<string | null>(null);  // 할 일 이미지 미리보기를 저장하는 상태
+
+  const [isEditingName, setIsEditingName] = useState(false); // 이름 수정 모드
 
   // 컴포넌트가 마운트될 때 할 일 정보를 가져옴
   useEffect(() => {
@@ -123,7 +126,7 @@ export default function ItemDetail() {
         className="w-full max-w-[1200px] bg-white mx-auto px-[24px] pc:px-[102px] pt-10 pb-10 space-y-6"
         style={{ minHeight: "calc(100vh - 60px)" }}
       >
-        {/* 이름 + 체크 상태 영역 */}
+        {/* 이름 + 체크 상태 */}
         <div className="w-full h-[60px] flex justify-center items-center border-[2px] border-slate-900 rounded-[24px] px-6 py-3 shadow-[4px_3.5px_0px_theme('colors.slate.900')] bg-white">
           {/* 체크박스 */}
           <button
@@ -137,10 +140,24 @@ export default function ItemDetail() {
               className="w-8 h-8"
             />
           </button>
-          {/* 텍스트 */}
-          <span className="ml-4 text-xl font-bold text-slate-900 underline overflow-hidden text-ellipsis whitespace-nowrap">
-            {name}
-          </span>
+
+          {/* 이름 텍스트 or 인풋 */}
+          {isEditingName ? (
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => setIsEditingName(false)}
+              autoFocus
+              className="ml-4 text-xl font-bold text-slate-900 border-b border-slate-300 outline-none bg-transparent w-full max-w-[600px]"
+            />
+          ) : (
+            <span
+              className="ml-4 text-xl font-bold text-slate-900 underline overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer"
+              onClick={() => setIsEditingName(true)}
+            >
+              {name}
+            </span>
+          )}
         </div>
         
         {/* 이미지 + 메모 */}
