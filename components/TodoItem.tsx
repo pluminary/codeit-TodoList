@@ -33,6 +33,7 @@ export default function TodoItem({ id, content, done, onToggle }: Props) {
           e.stopPropagation();
           onToggle(id, !done);
         }}
+        className="flex-shrink-0 w-8 h-8"
       >
         <img
           src={done ? "/icons/checkbox-on.svg" : "/icons/checkbox-off.svg"}
@@ -43,7 +44,7 @@ export default function TodoItem({ id, content, done, onToggle }: Props) {
 
       {/* 텍스트 */}
       <span
-        className={`text-slate-800 text-base font-regular overflow-hidden text-ellipsis whitespace-nowrap ${
+        className={`flex-1 text-slate-800 text-base font-regular overflow-hidden text-ellipsis whitespace-nowrap ${
           done ? "line-through" : ""
         }`}
       >
